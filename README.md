@@ -1,8 +1,5 @@
 ## Seed code - Boilerplate for step 6 - Keep Note Assignment
 
-## Don't submit your solution for this step in hobbes for evaluation
-## Once done with the coding, please share it with your mentor for manual review
-
 ### Assignment Step Description
 
 In this case study Keep Note Step 6, we will implement JWT (JSON Web Token) on top of Keep Note Step 5 Assignment. JSON Web Token (JWT) is an open standard (RFC 7519) that 
@@ -63,7 +60,7 @@ The folders and files you see in this repositories, is how it is expected to be 
 
 5. Add your new repository reference as remote
 
-     `git remote add origin https://gitlab-dev.stackroute.in/{{yourusername}}/assignment-solution-step6`
+     `git remote add origin https://gitlab-cts.stackroute.in/{{yourusername}}/assignment-solution-step6`
 
      **Note: {{yourusername}} should be replaced by your username from gitlab**
 
