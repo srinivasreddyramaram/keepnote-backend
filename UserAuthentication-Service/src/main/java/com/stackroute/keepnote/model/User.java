@@ -2,6 +2,9 @@ package com.stackroute.keepnote.model;
 
 import java.util.Date;
 
+import org.hibernate.annotations.Entity;
+import org.springframework.data.annotation.Id;
+
 /*
  * The class "User" will be acting as the data model for the User Table in the database. 
  * Please note that this class is annotated with @Entity annotation. 
@@ -9,7 +12,7 @@ import java.util.Date;
  * If it finds any, then it will begin the process of looking through that particular 
  * Java object to recreate it as a table in your database.
  */
-
+@Entity
 public class User {
 
     /*
@@ -22,61 +25,61 @@ public class User {
 	 */
 	
 
-    
+    @Id
     private String userId;
     private String userPassword;
-   
+    private String lastName;
+    private String firstName;
+    private String userRole;
+    private Date userAddedDate;
 	
     public String getUserId() {
-    	return null;
+    	return userId;
     }
 
     public void setUserId(String  string) {
+       this.userId = string;
        
     }
 
     public String getFirstName() {
-    	return null;
+    	return firstName;
     }
 
     public void setFirstName(String  string) {
-        
+        this.firstName = string;
     }
 
     public String getLastName() {
-    	return null;
+    	return lastName;
     }
 
     public void setLastName(String  string) {
-       
+       this.lastName = string;
     }
 
     public String getUserPassword() {
-    	return null;
+    	return userPassword;
     }
 
     public void setUserPassword(String  string) {
-       
+       this.userPassword = string;
     }
 
     public String getUserRole() {
-    	return null;
+    	return userRole;
     }
 
     public void setUserRole(String  string) {
-      
+      this.userRole = string;
     }
 
 
     public Date getUserAddedDate() {
-        return null;
+        return userAddedDate;
     }
 
     public void setUserAddedDate(Date date) {
-        
+        this.userAddedDate = date;
     }
-
-    
-
-
 }

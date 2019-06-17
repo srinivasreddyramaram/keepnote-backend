@@ -1,8 +1,12 @@
 package com.stackroute.keepnote.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.stackroute.keepnote.exception.UserAlreadyExistsException;
 import com.stackroute.keepnote.exception.UserNotFoundException;
 import com.stackroute.keepnote.model.User;
+import com.stackroute.keepnote.repository.UserAutheticationRepository;
 
 /*
 * Service classes are used here to implement additional business logic/validation 
@@ -15,7 +19,7 @@ import com.stackroute.keepnote.model.User;
 * */
 
 
-
+@Service
 public class UserAuthenticationServiceImpl implements UserAuthenticationService {
 
     /*
@@ -23,21 +27,27 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
 	 * Constructor-based autowiring) Please note that we should not create any
 	 * object using the new keyword.
 	 */
+	private UserAutheticationRepository userAuthenticationRepository;
+    
+	@Autowired
+     public UserAuthenticationServiceImpl(UserAutheticationRepository userAuthenticationRepository) {
+		super();
+		this.userAuthenticationRepository = userAuthenticationRepository;
+	}
 
 
-
-
-
-     /*
+	/*
 	 * This method should be used to validate a user using userId and password.
 	 *  Call the corresponding method of Respository interface.
 	 * 
 	 */
     @Override
     public User findByUserIdAndPassword(String userId, String password) throws UserNotFoundException {
-
+    	User foundUser = userAuthenticationRepository.findByUserIdAndUserPassword(userId, password);
+    	if(foundUser == null)
+    		throw new UserNotFoundException("No user found");
       
-        return null;
+        return foundUser;
     }
 
 
@@ -50,7 +60,11 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
 
     @Override
     public boolean saveUser(User user) throws UserAlreadyExistsException {
-       
-        return false;
+        boolean flag = false;
+        User savedUser = userAuthenticationRepository.save(user);
+        if(savedUser == null)
+        	throw new UserAlreadyExistsException("User already exists");
+        else
+        	return false;
     }
 }
