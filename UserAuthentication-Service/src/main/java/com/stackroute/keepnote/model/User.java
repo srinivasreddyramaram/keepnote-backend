@@ -2,8 +2,9 @@ package com.stackroute.keepnote.model;
 
 import java.util.Date;
 
-import org.hibernate.annotations.Entity;
-import org.springframework.data.annotation.Id;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 
 /*
  * The class "User" will be acting as the data model for the User Table in the database. 
