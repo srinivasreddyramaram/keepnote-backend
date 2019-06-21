@@ -1,5 +1,7 @@
 package com.stackroute.keepnote.service;
 
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,10 +63,20 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
     @Override
     public boolean saveUser(User user) throws UserAlreadyExistsException {
         boolean flag = false;
-        User savedUser = userAuthenticationRepository.save(user);
-        if(savedUser == null)
+        User foundUser = null;
+        try{
+        	foundUser = userAuthenticationRepository.findById(user.getUserId()).get();
+        }
+        catch(NoSuchElementException e) {
+        	e.printStackTrace();
+        }
+        if(foundUser == null) {
+        	userAuthenticationRepository.save(user);
+        	flag = true;
+        }
+        else {
         	throw new UserAlreadyExistsException("User already exists");
-        else
-        	return false;
+        }
+        return flag;
     }
 }

@@ -1,6 +1,17 @@
 package com.stackroute.keepnote.controller;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.stackroute.keepnote.exception.UserAlreadyExistsException;
+import com.stackroute.keepnote.exception.UserNotFoundException;
+import com.stackroute.keepnote.model.User;
 import com.stackroute.keepnote.service.UserAuthenticationService;
 
 /*
@@ -11,6 +22,8 @@ import com.stackroute.keepnote.service.UserAuthenticationService;
  * format. Starting from Spring 4 and above, we can use @RestController annotation which 
  * is equivalent to using @Controller and @ResposeBody annotation
  */
+@RestController
+@RequestMapping("/api/v1/auth/")
 public class UserAuthenticationController {
 
     /*
@@ -18,8 +31,11 @@ public class UserAuthenticationController {
 	 * autowiring) Please note that we should not create an object using the new
 	 * keyword
 	 */
-
+	private UserAuthenticationService userAuthenticationService;
+	@Autowired
     public UserAuthenticationController(UserAuthenticationService authicationService) {
+		super();
+		this.userAuthenticationService = authicationService;
 	}
 
 /*
@@ -32,8 +48,19 @@ public class UserAuthenticationController {
 	 * 
 	 * This handler method should map to the URL "/api/v1/auth/register" using HTTP POST method
 	 */
-
-
+	@PostMapping("register")
+	public ResponseEntity<?> registerUser(@RequestBody User user){
+		ResponseEntity<?> reponseEntity = null;
+		try{
+			userAuthenticationService.saveUser(user);
+			reponseEntity = new ResponseEntity<User>(user, HttpStatus.CREATED);
+		}
+		catch(UserAlreadyExistsException e)
+		{
+			reponseEntity = new ResponseEntity<String>(e.getMessage(), HttpStatus.CONFLICT);
+		}
+		return reponseEntity;
+	}
 
 
 	/* Define a handler method which will authenticate a user by reading the Serialized user
@@ -48,7 +75,27 @@ public class UserAuthenticationController {
 	 * 
 	 * This handler method should map to the URL "/api/v1/auth/login" using HTTP POST method
 	*/
-
+	@PostMapping("login")
+	public ResponseEntity<?> loginUser(@RequestBody User user){
+		ResponseEntity<?> reponseEntity = null;
+		User foundUser = null;
+		String token = null;
+		try{
+			foundUser = userAuthenticationService.findByUserIdAndPassword(user.getUserId(), user.getUserPassword());
+			if(foundUser != null)
+				token = getToken(foundUser.getUserId(), foundUser.getUserPassword());
+			reponseEntity = new ResponseEntity<String>(token, HttpStatus.OK);
+		}
+		catch(UserNotFoundException e)
+		{
+			reponseEntity = new ResponseEntity<String>("Incorrect user/password", HttpStatus.UNAUTHORIZED);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return reponseEntity;
+	}
 
 
 
