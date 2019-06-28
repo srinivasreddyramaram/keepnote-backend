@@ -1,6 +1,8 @@
 package com.stackroute.keepnote.controller;
 
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,10 @@ import com.stackroute.keepnote.exception.UserAlreadyExistsException;
 import com.stackroute.keepnote.exception.UserNotFoundException;
 import com.stackroute.keepnote.model.User;
 import com.stackroute.keepnote.service.UserAuthenticationService;
+
+import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 /*
  * As in this assignment, we are working on creating RESTful web service, hence annotate
@@ -104,10 +110,9 @@ public class UserAuthenticationController {
 // Generate JWT token
 	public String getToken(String username, String password) throws Exception {
 			
-        return null;
-        
-        
+		String token = null;
+		token = Jwts.builder().setSubject(username).setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS256, "secretKey").compact();		
+		return token;
 }
-
 
 }
