@@ -1,12 +1,19 @@
 package com.stackroute.keepnote.jwtfilter;
 
 
-import org.springframework.web.filter.GenericFilterBean;
+import java.io.IOException;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.filter.GenericFilterBean;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 
 
 
@@ -35,8 +42,16 @@ public class JwtFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
+    	HttpServletRequest request2 = (HttpServletRequest) request; 
+    	HttpServletResponse response2 = (HttpServletResponse) response;
        
-
+    	String authorizationHeaderString = request2.getHeader("authorization");
+    	if(authorizationHeaderString == null || !authorizationHeaderString.startsWith("Bearer"))
+    		throw new ServletException("Missing authorization header or bearer");
+    	String bearerToken = authorizationHeaderString.substring(7);
+    	Claims claims = Jwts.parser().setSigningKey("secretKey").parseClaimsJws(bearerToken).getBody();
+    	request.setAttribute("claims", claims);
+    	chain.doFilter(request2, response2);
 
     }
 }

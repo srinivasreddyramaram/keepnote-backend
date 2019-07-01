@@ -12,45 +12,61 @@ public class Category {
 	 * of categoryCreationDate should not be accepted from the user but should be
 	 * always initialized with the system date.
 	 */
+	private String categoryId;
+	private String categoryName;
+	private String categoryDescription;
+	private String categoryCreatedBy;
+	private Date categoryCreationDate;
 
-    public String getCategoryId() {
-        return null;
-    }
+	public Category() {
 
-    public void setCategoryId(String categoryId) {
-       
-    }
+	}
 
-    public String getCategoryName() {
-        return null;
-    }
+	public Category(String Int, String string, String string1, Date date, String string2) {
+		categoryId = Int;
+		categoryName = string;
+		categoryDescription = string1;
+		categoryCreatedBy = string2;
+		categoryCreationDate = date;
+	}
 
-    public void setCategoryName(String categoryName) {
-        
-    }
+	public void setCategoryId(String Int) {
+		categoryId = Int;
+	}
 
-    public String getCategoryDescription() {
-        return null;
-    }
+	public String getCategoryId() {
+		return categoryId;
+	}
 
-    public void setCategoryDescription(String categoryDescription) {
-      
-    }
+	public String getCategoryName() {
+		return categoryName;
+	}
 
-    public String getCategoryCreatedBy() {
-        return null;
-    }
+	public void setCategoryName(String string) {
+		categoryName = string;
+	}
 
-    public void setCategoryCreatedBy(String categoryCreatedBy) {
-       
-    }
+	public String getCategoryDescription() {
+		return categoryDescription;
+	}
 
-    public Date getCategoryCreationDate() {
-        return null;
-    }
+	public void setCategoryDescription(String string) {
+		categoryDescription = string;
+	}
 
-    public void setCategoryCreationDate(Date categoryCreationDate) {
-      
-    }
+	public void setCategoryCreationDate(Date date) {
+		categoryCreationDate = date;
+	}
+
+	public void setCategoryCreatedBy(String string) {
+		categoryCreatedBy = string;
+	}
+
+	@Override
+	public String toString() {
+		return "Category [categoryId=" + categoryId + ", categoryName=" + categoryName + ", categoryDescription="
+				+ categoryDescription + ", categoryCreatedBy=" + categoryCreatedBy + ", categoryCreationDate="
+				+ categoryCreationDate + "]";
+	}
 
 }
