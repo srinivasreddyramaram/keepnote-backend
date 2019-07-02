@@ -1,24 +1,96 @@
 # Dockerfile has been added in all micro-services, you need to dockerize all micro-services and add docker-compose.yml file
 version: '3'
 services:
-  mysql:
-    image: mysql:latest
-    ports:
-      - "3306:3306"
-    container-name: mysql-docker
-    network-mode: host
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: keepnote_db
-      MYSQL_USER: approot
-      MYSQL_PASSWORD: root123
-  
-  spring:
-    image: spring:latest
-    restart: always
-    network-mode: host
-    container-name: spring-image
-    depends_on:
-      - mysql
-    ports:
-      - 8080:8080
+ user-mysql:
+   image: mysql:5.7
+   network_mode: host
+   ports:
+   - 3306:3306
+   environment:
+     MYSQL_DATABASE: keepnotes
+     MYSQL_USER: root
+     MYSQL_PASSWORD: root
+     MYSQL_CI_URL: jdbc:mysql://localhost:3306/keepnotes
+     MYSQL_HOST: localhost
+ user-mongo:
+   image: mongo:latest
+   network_mode: host
+   ports:
+   - 27017:27017
+   environment:
+     MONGO_PORT: 27017
+     MONGO_HOST: localhost
+ authentication-service:
+   image: hema/userauthenticationservice:v1
+   build:
+      context: UserAuthentication-Service/
+   restart: always
+   network_mode: host
+   depends_on:
+   - user-mysql
+   ports:
+   - 8089:8089
+ category-service:
+   image: hema/categoryservice:v1
+   build:
+      context: CategoryService/
+   restart: always
+   network_mode: host
+   environment:
+     MONGO_USERNAME: root
+     MONGO_PASSWORD: root
+     MONGO_DATABASE: categoryDb
+     MONGO_PORT: 27017
+     MONGO_HOST: localhost
+   depends_on:
+   - user-mongo
+   ports:
+   - 8083:8083
+ note-service:
+   image: hema/noteservice:v1
+   build:
+      context: NoteService/
+   restart: always
+   network_mode: host
+   environment:
+     MONGO_USERNAME: root
+     MONGO_PASSWORD: root
+     MONGO_DATABASE: noteDb
+     MONGO_PORT: 27017
+     MONGO_HOST: localhost
+   depends_on:
+   - user-mongo
+   ports:
+   - 8082:8082
+ reminder-service:
+   image: hema/reminderservice:v1
+   build:
+      context: ReminderService/
+   restart: always
+   network_mode: host
+   environment:
+     MONGO_USERNAME: root
+     MONGO_PASSWORD: root
+     MONGO_DATABASE: reminderDb
+     MONGO_PORT: 27017
+     MONGO_HOST: localhost
+   depends_on:
+   - user-mongo
+   ports:
+   - 8081:8081
+ user-service:
+   image: hema/userservice:v1
+   build:
+      context: UserService/
+   restart: always
+   network_mode: host
+   environment:
+     MONGO_USERNAME: root
+     MONGO_PASSWORD: root
+     MONGO_DATABASE: userDb
+     MONGO_PORT: 27017
+     MONGO_HOST: localhost
+   depends_on:
+   - user-mongo
+   ports:
+   - 8080:8080
