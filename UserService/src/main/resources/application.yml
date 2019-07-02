@@ -11,6 +11,3 @@ spring:
     name: user-service
 server:
   port: 8080
-
-
-
